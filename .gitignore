@@ -1,13 +1,16 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
+.venv/
 .Python
+config.env
+log.text
+.vscode/
+**/__pycache__/
+*.session
+*.session-journal
+*.session-shm
+*.session-wal
 build/
 develop-eggs/
 dist/
@@ -20,37 +23,6 @@ parts/
 sdist/
 var/
 wheels/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-
-# Virtual environments
-venv/
-env/
-ENV/
-.venv/
-
-# Telegram / Hydrogram runtime sessions
-*.session
-*.session-journal
-*.session-shm
-*.session-wal
-
-# Local databases / runtime state
-*.sqlite
-*.sqlite3
-*.db
-.restart_state.txt
-
-# Logs
-event-log.txt
-event-log.txt.*
-*.log
-
-# Secrets / local environment
-.env
-.env.*
-!.env.example
-config.env
-start.sh
