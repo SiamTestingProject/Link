@@ -2,10 +2,12 @@ import os
 import unittest
 
 # Safe non-production values so importing the bot package for unit tests never
-# depends on a developer's local environment.
+# depends on a developer's local environment. The bot token is deliberately
+# not shaped like a real BotFather credential so secret-scanning tests can
+# verify the tracked repository without false positives.
 os.environ.setdefault("TELEGRAM_API_ID", "12345")
 os.environ.setdefault("TELEGRAM_API_HASH", "0123456789abcdef0123456789abcdef")
-os.environ.setdefault("TELEGRAM_BOT_TOKEN", "123456:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi")
+os.environ.setdefault("TELEGRAM_BOT_TOKEN", "unit-test-token-not-a-real-credential")
 os.environ.setdefault("TELEGRAM_BOT_USERNAME", "ExampleBot")
 os.environ.setdefault("OWNER_ID", "1")
 
