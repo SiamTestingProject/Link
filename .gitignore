@@ -25,20 +25,32 @@ share/python-wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environments
+# Virtual environments
 venv/
 env/
 ENV/
-.venv
+.venv/
 
-# Telegram Bot sessions & logs
+# Telegram / Hydrogram runtime sessions
 *.session
 *.session-journal
+*.session-shm
+*.session-wal
+
+# Local databases / runtime state
+*.sqlite
+*.sqlite3
+*.db
+.restart_state.txt
+
+# Logs
 event-log.txt
+event-log.txt.*
 *.log
 
-# Environment variables
+# Secrets / local environment
 .env
+.env.*
+!.env.example
 config.env
 start.sh
-.restart_state.txt
