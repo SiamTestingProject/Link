@@ -1,0 +1,68 @@
+name: Import FileToLink project
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/import-filetolink.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace repository with uploaded FileToLink project
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SOURCE_COMMIT="3e163b6469206c1b136aeb2a9020863ce551d03c"
+          EXPECTED_TREE="4ff9c2c279431b1181c077fa97f1701393f90375"
+          TMP_DIR="$(mktemp -d)"
+
+          curl -fsSL \
+            "https://github.com/fyaz05/FileToLink/archive/${SOURCE_COMMIT}.tar.gz" \
+            -o "${TMP_DIR}/source.tar.gz"
+
+          mkdir -p "${TMP_DIR}/source"
+          tar -xzf "${TMP_DIR}/source.tar.gz" \
+            -C "${TMP_DIR}/source" \
+            --strip-components=1
+
+          cd "${TMP_DIR}/source"
+          git init -q
+          git add -A
+          ACTUAL_TREE="$(git write-tree)"
+          rm -rf .git
+
+          if [ "${ACTUAL_TREE}" != "${EXPECTED_TREE}" ]; then
+            echo "Source tree verification failed."
+            echo "Expected: ${EXPECTED_TREE}"
+            echo "Actual:   ${ACTUAL_TREE}"
+            exit 1
+          fi
+
+          cd "${GITHUB_WORKSPACE}"
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf -- {} +
+          cp -a "${TMP_DIR}/source/." .
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "Repository already matches FileToLink."
+            exit 0
+          fi
+
+          git commit -m "Replace repository with FileToLink project"
+          git push origin HEAD:main
